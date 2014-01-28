@@ -23,6 +23,8 @@ printf "homes${bldblu}h${txtdef}ick uses git in concert with symlinks to track y
   homeshick update CASTLE             # Update the castle
   homeshick redact CASTLE FILE..      # Add a file to a castle and prompt for sanitization
   homeshick unredact [CASTLE..]       # Generates dotfiles from redacted files in castle
+  homeshick changes            # Displays any changes done to the local CASTLEs
+  homeshick export               # Creates an export list of all installed CASTLEs
 
  Aliases:
   symlink # Alias to link
@@ -33,6 +35,7 @@ printf "homes${bldblu}h${txtdef}ick uses git in concert with symlinks to track y
    -s, [--skip]     # Skip files that already exist
    -f, [--force]    # Overwrite files that already exist
    -b, [--batch]    # Batch-mode: Skip interactive prompts / Choose the default
+   -v                      # Verbose-mode: Displays diffs from all changes of the local CASTLEs
 
  Note:
   To check, refresh, pull or symlink all your castles
@@ -105,12 +108,18 @@ function extended_help {
       printf "Updates the castle if the update file exists.\n"
       printf "Usage:\n  homeshick update CASTLE"
       ;;
+             export)
+      printf "Exports a list of all CASTLEs\n"
+      printf "Usage:\n  homeshick export"
+      ;;
+            changes)
+      printf "Displays a list of all changes to the local CASTLEs\n"
+      printf "Usage:\n  homeshick changes [-v]"
+      ;;
 		help)
       printf "Shows usage of a task\n"
       printf "Usage:\n  homeshick help [TASK]"
       ;;
-
-
 		*)    help  ;;
 		esac
 	printf "\n\n"

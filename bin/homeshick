@@ -12,6 +12,7 @@ source $homeshick/utils/fs.sh
 source $homeshick/utils/git.sh
 source $homeshick/utils/help.sh
 source $homeshick/utils/exit_status.sh
+source $homeshick/utils/utils.sh
 
 exit_status=$EX_SUCCESS
 
@@ -56,7 +57,7 @@ done
 [[ $# -gt 0 ]] || cmd="help"
 
 # Get the subcommand
-valid_commands=(cd clone generate list check updates refresh pull symlink link track help install update redact unredact)
+valid_commands=(cd clone generate list check updates refresh pull symlink link track help install update redact unredact export changes)
 if [[ ! $cmd ]]; then
 	if [[ " ${valid_commands[*]} " =~ " $1 " ]]; then
 		cmd=$1
@@ -83,6 +84,7 @@ while [[ $# -gt 0 ]]; do
 			-s | --skip)  SKIP=true  ; shift; continue ;;
 			-f | --force) FORCE=true ; shift; continue ;;
 			-b | --batch) BATCH=true ; shift; continue ;;
+			-v) shift; continue ;;
 			*)     err $EX_USAGE "Unknown option '$1'" ;;
 		esac
 	fi
@@ -94,10 +96,10 @@ while [[ $# -gt 0 ]]; do
 		refresh)
 			[[ ! $threshhold ]] && threshhold=$[$1*86400] || params+=("$1")
 			shift; continue ;;
-		track | redact)
+		track | redact | export )
 			[[ ! $castle ]] && castle=$1 || params+=("$1")
 			shift; continue ;;
-		list) err $EX_USAGE "The 'list' command does not take any arguments" ;;
+		list | changes) err $EX_USAGE "The '$cmd' command does not take any arguments" ;;
 		help)
 			[[ ! $help_cmd ]] && help_cmd=$1
 			shift; continue;;
@@ -122,6 +124,8 @@ fi
 
 case $cmd in
 	list)  list           ;;
+	export)	homesick_export	;;
+	changes)	homesick_local_changes "$param"	;;
 	cd)    help cd        ;; # cd is implemented in the homeshick.{sh,csh} helper script.
 	help)  help $help_cmd ;;
 	*)
