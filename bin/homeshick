@@ -7,6 +7,7 @@ homeshick="$repos/homeshick"
 # The install script however symlinks us. So $0 changes.
 
 source $homeshick/utils/log.sh
+source $homeshick/utils/password.sh
 source $homeshick/utils/fs.sh
 source $homeshick/utils/git.sh
 source $homeshick/utils/help.sh
@@ -55,7 +56,7 @@ done
 [[ $# -gt 0 ]] || cmd="help"
 
 # Get the subcommand
-valid_commands=(cd clone generate list check updates refresh pull symlink link track help install update)
+valid_commands=(cd clone generate list check updates refresh pull symlink link track help install update redact unredact)
 if [[ ! $cmd ]]; then
 	if [[ " ${valid_commands[*]} " =~ " $1 " ]]; then
 		cmd=$1
@@ -87,13 +88,13 @@ while [[ $# -gt 0 ]]; do
 	fi
 
 	case $cmd in
-		cd | clone | generate | check | updates | pull | symlink | link |install | update)
+		cd | clone | generate | check | updates | pull | symlink | link |install | update | unredact)
 			params+=("$1")
 			shift; continue ;;
 		refresh)
 			[[ ! $threshhold ]] && threshhold=$[$1*86400] || params+=("$1")
 			shift; continue ;;
-		track)
+		track | redact)
 			[[ ! $castle ]] && castle=$1 || params+=("$1")
 			shift; continue ;;
 		list) err $EX_USAGE "The 'list' command does not take any arguments" ;;
@@ -107,12 +108,12 @@ done
 # If no additional arguments are given, run the subcommand for every castle
 if [[ ! $params ]]; then
 	case $cmd in
-		check | updates | refresh | pull | symlink | link | install | update)
+		check | updates | refresh | pull | symlink | link | install | update | unredact)
 			while IFS= read -d $'\n' -r name ; do
 				params+=("$name")
 			done < <(list_castle_names) ;;
 		# These commands require parameters, show the help message instead
-		cd | clone | generate | track) help_cmd=$cmd; cmd="help"; exit_status=$EX_USAGE ;;
+		cd | clone | generate | track | redact) help_cmd=$cmd; cmd="help"; exit_status=$EX_USAGE ;;
 	esac
 fi
 
@@ -124,6 +125,10 @@ case $cmd in
 	cd)    help cd        ;; # cd is implemented in the homeshick.{sh,csh} helper script.
 	help)  help $help_cmd ;;
 	*)
+		case $cmd in
+			redact | unredact) if supports_storage ; then declare - A secrets: fi ;;
+		esac
+
 		for param in "${params[@]}"; do
 			case $cmd in
 				clone)         clone "$param"               ;;
@@ -135,6 +140,8 @@ case $cmd in
 				track)         track "$castle" "$param"     ;;
 				install)	     install "$param" 	;;
 				update)	update "$param"	;;
+				redact)		redact $castle $param		;;
+				unredact)	unredact $param 	;;
 			esac
 			result=$?
 			if [[ $exit_status == 0 && $result != 0 ]]; then
