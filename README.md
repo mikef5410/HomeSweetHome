@@ -1,19 +1,30 @@
-homeshick
+HomeSweetHome
 =========
-homeshick keeps your dotfiles up to date using only git and bash.
+HomeSweetHome is based on [HomesHick](https://github.com/andsens/homeshick) from Anders Ingemann which is again based on [Homesick](https://github.com/technicalpickles/homesick)
+
+This version has additional features:
+
+* Redact and Unredact to mimic [Briefcase's](http://jim.github.io/briefcase/) redact and generate commands. (Taken from https://github.com/Billiam/homeshick)
+* Install and Update commands to allow executing of install and update scripts.
+
+Also this version is mainly geared toward OSX usage, to the castles you will find for it from me will be OSX based.
+
+HomeSweetHome keeps your dotfiles up to date using only git and bash.
 It can handle many dotfile repositories at once, so you can beef up your own dotfiles
 with bigger projects like [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) and still
 keep everything organized.
 
-For detailed [installation instructions](https://github.com/andsens/homeshick/wiki/Installation), [tutorials](https://github.com/andsens/homeshick/wiki/Tutorials) and [tips](https://github.com/andsens/homeshick/wiki/Automatic-deployment) & [tricks](https://github.com/andsens/homeshick/wiki/Symlinking) have a look at the [wiki](https://github.com/andsens/homeshick/wiki).
+For detailed [installation instructions](https://github.com/dredhorse/HomeSweetHome/wiki/Installation), [tutorials](https://github.com/dredhorse/HomeSweetHome/wiki/Tutorials) and [tips](https://github.com/dredhorse/HomeSweetHome/wiki/Automatic-deployment) & [tricks](https://github.com/dredhorse/HomeSweetHome/wiki/Symlinking) have a look at the [wiki](https://github.com/dredhorse/HomeSweetHome/wiki).
+
+Note: the command homeshick and the directory homesick is still being used to maintain backwards compability!
 
 Quick install
 -------------
 
-homeshick is installed to your own home directory and does not require root privileges to be installed.
+HomeSweetHome is installed to your own home directory and does not require root privileges to be installed.
 
 ```sh
-git clone git://github.com/andsens/homeshick.git $HOME/.homesick/repos/homeshick
+git clone https://github.com/dredhorse/HomeSweetHome.git $HOME/.homesick/repos/homeshick
 ```
 
 To invoke homeshick from sh and its derivates (bash, zsh, fish etc.) source the `homeshick.sh` script from your rc-script:
@@ -26,7 +37,7 @@ printf '\nalias homeshick source "$HOME/.homesick/repos/homeshick/bin/homeshick.
 ```
 # Usage #
 
-homeshick is used via subcommands, so simply typing `homeshick` will yield a helpful message
+HomeSweetHome is used via subcommands, so simply typing `homeshick` will yield a helpful message
 that tersely explains all of the things you can do with it.
 
 Most subcommands accept castlenames as arguments.
@@ -93,6 +104,18 @@ All you need to do now is call `track` to fill it with your dotfiles.
 ### refresh ###
 Run this command to check if any of your repositories have not been updated the last week.
 This goes very well with your rc scripts (check out the [tutorial](#tutorial) for more about this).
+
+### install ###
+Run this command to execute any included installation script  of the castle.
+
+### update ###
+Run this command to execute any included update script of the castle.
+
+### export ###
+Run this command to export a list of installed castles.
+
+### changes ###
+Run this command to check if any of your local repositories contain changes against the online repos.
 
 
 ## Tutorial ##
@@ -165,6 +188,11 @@ which is why the script contains variables to hold the unencrypted deploy key of
 They will be added to the ssh-agent in order for git to be able to clone. Enjoy!
 
 
+# HomeSweetHome and homeshick #
+
+HomeSweetHome was created to allow an install and update functionality to be included into homeshick. Later on some
+other functions where added like the briefcase support, export and changes.
+
 # homeshick and homesick #
 The original goal of homeshick was to mimick the functionality of
 [homesick](https://github.com/technicalpickles/homesick) so that it could be a drop-in replacement.
@@ -172,5 +200,6 @@ Since its inception however homeshick has deviated quite a bit from the ruby-ver
 All of the original commands are still available, but have been simplified and enhanced with interactive
 prompts like symlinking new files after a castle has been updated.
 
-# homeshick and briefcase #
+# HomeSweetHome and briefcase #
 The redact and unredact are designed to mimic [Briefcase's](http://jim.github.io/briefcase/) redact and generate commands.
+
