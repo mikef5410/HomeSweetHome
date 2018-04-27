@@ -155,7 +155,7 @@ case $cmd in
 		case $cmd in
 			clone)   install_cloned_castle ${params[*]} ; symlink_cloned_files ${params[*]}     ;;
 			refresh) update_updated_castle ${params[*]} ; pull_outdated $threshhold ${params[*]} 	;;
-			pull)   iupdate_updated_castle ${params[*]} ;  symlink_new_files ${params[*]} ;         ;;
+			pull)   update_updated_castle ${params[*]} ;  symlink_new_files ${params[*]} ;         ;;
 		esac
 		result=$?
 		if [[ $exit_status == 0 && $result != 0 ]]; then
